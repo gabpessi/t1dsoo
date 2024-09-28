@@ -1,8 +1,8 @@
 class Pessoa():
     def __init__(self, nome: str, telefone: int, email:str):
-        self.nome = nome
-        self.telefone = telefone
-        self.email = email
+        self.__nome = nome
+        self.__telefone = telefone
+        self.__email = email
 
     @property
     def nome(self):
@@ -34,10 +34,4 @@ class Pessoa():
             return
        self.__email = email
     
-   # def x(self):
-   #     return self.__x
-
-   # def (self, x):
-   #    if not isinstance():
-   #         return
-    #   self.__x = x
+   

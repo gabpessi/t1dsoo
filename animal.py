@@ -5,15 +5,6 @@ class Animal:
         self.__raca = raca
         self.__idade = idade
 
-   # @property
-   # def x(self):
-   #     return self.__x
-
-   # def (self, x):
-   #    if not isinstance():
-   #         return
-    #   self.__x = x
-
     @property 
     def nome(self):
         return self.__nome
@@ -55,11 +46,7 @@ class Animal:
        self.__idade = idade 
 
     
-    def incrementar_idade(self, idade):
-        pass
+    def incrementar_idade(self):
+        self.__idade += 1
 
-    def adicionar_consulta(Consulta):
-        pass
-
-    def listar_consultas():
-        pass
+    

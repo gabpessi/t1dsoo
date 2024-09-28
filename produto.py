@@ -35,9 +35,12 @@ class Produto:
        self.__quantidade_estoque = quantidade_estoque
 
     
-    def verificar_disponibilidade():
-        pass
-
-    def atualizar_estoque():
-        pass
+    def verificar_disponibilidade(self: bool):   
+        return self.__quantidade_estoque > 0
     
+    def atualizar_estoque(self, quantidade: int):        
+        if not isinstance(quantidade, int):
+            return        
+        self.__quantidade_estoque += quantidade
+        if self.__quantidade_estoque < 0:
+            self.__quantidade_estoque = 0 
