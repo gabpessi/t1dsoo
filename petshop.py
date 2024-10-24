@@ -82,8 +82,8 @@ class PetShop:
         return [produto.nome for produto in self.__produtos]   
     
 
-    def cadastrar_servico(self, nome: str, preco: int):
-        servico = Servico(nome, preco)
+    def cadastrar_servico(self, nome: str, preco: int, codigo: int):
+        servico = Servico(nome, preco, codigo)
         if servico in self.__servicos:
             return
         self.__servicos.append(servico)   
@@ -104,11 +104,11 @@ class PetShop:
         self.__animais.append(animal)
     
     
-    def cadastrar_consulta(self, data: str, horario: str, descricao: str, servico: Servico, animal: Animal):        
+    def cadastrar_consulta(self, data: str, horario: str, descricao: str, servico: Servico, animal: Animal, codigo: int):        
         # Verificar se há veterinários disponíveis
         if not self.__veterinarios:
             return "Nenhum veterinário disponível no momento."
-        consulta = Consulta(data, horario, descricao, animal, servico)
+        consulta = Consulta(data, horario, descricao, animal, servico, codigo)
 
         for veterinario in self.__veterinarios:
             if any(c.data == data and c.horario == horario for c in veterinario.consultas):

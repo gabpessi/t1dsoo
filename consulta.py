@@ -3,12 +3,13 @@ from servico import Servico
 
 
 class Consulta:
-    def __init__(self, data: str, horario:str, descricao: str, animal: Animal, servico: Servico):
+    def __init__(self, data: str, horario:str, descricao: str, animal: Animal, servico: Servico, codigo: int):
         self.__data = data
         self.__horario = horario
         self.__descricao = descricao
         self.__animal = animal
         self.__servico = servico
+        self.__codigo = codigo
 
     @property 
     def data(self):
@@ -60,5 +61,14 @@ class Consulta:
             return
        self.__servico = servico
 
-    def exibir_detalhes(self):
-        return f"Consulta em {self.__data} no horário {self.__horario} para {self.__animal.nome}. Descrição: {self.__descricao}. Serviço: {self.__servico.nome}."
+    @property 
+    def codigo(self):
+        return self.__codigo
+
+    @codigo.setter
+    def codigo(self, codigo):
+       if not isinstance(codigo, int):
+            return
+       self.__codigo = codigo
+
+    

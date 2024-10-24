@@ -1,5 +1,6 @@
 class Produto:
-    def __init__(self, nome: str, preco: int, quantidade_estoque: int):
+    def __init__(self, nome: str, preco: int, codigo: int, quantidade_estoque: int):
+        self.__codigo = codigo
         self.__nome = nome
         self.__preco = preco
         self.__quantidade_estoque = quantidade_estoque
@@ -20,9 +21,19 @@ class Produto:
 
     @preco.setter
     def preco(self, preco):
-       if not isinstance():
+       if not isinstance(self, int):
             return
        self.__preco = preco    
+
+    @property
+    def codigo(self):
+        return self.__codigo
+
+    @codigo.setter
+    def codigo(self, codigo):
+       if not isinstance(codigo, int):
+            return
+       self.__codigo = codigo
 
     @property
     def quantidade_estoque(self):
@@ -35,12 +46,4 @@ class Produto:
        self.__quantidade_estoque = quantidade_estoque
 
     
-    def verificar_disponibilidade(self: bool):   
-        return self.__quantidade_estoque > 0
     
-    def atualizar_estoque(self, quantidade: int):        
-        if not isinstance(quantidade, int):
-            return        
-        self.__quantidade_estoque += quantidade
-        if self.__quantidade_estoque < 0:
-            self.__quantidade_estoque = 0 

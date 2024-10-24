@@ -1,8 +1,10 @@
-class Pessoa():
-    def __init__(self, nome: str, telefone: int, email:str):
+from abc import ABC, abstractmethod
+class Pessoa(ABC):
+    def __init__(self, nome: str, telefone: int, email:str, cpf: str):
         self.__nome = nome
         self.__telefone = telefone
         self.__email = email
+        self.__cpf = cpf    
 
     @property
     def nome(self):
@@ -13,6 +15,16 @@ class Pessoa():
        if not isinstance(nome, str):
             return
        self.__nome = nome
+    
+    @property
+    def cpf(self):
+        return self.__cpf
+
+    @cpf.setter
+    def cpf(self, cpf):
+       if not isinstance(cpf, str):
+            return
+       self.__cpf = cpf
 
     @property
     def telefone(self):

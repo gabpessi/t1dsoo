@@ -1,7 +1,8 @@
 class Servico:
-    def __init__(self, nome: str, preco: int):
+    def __init__(self, nome: str, preco: int, codigo: int):
         self.__nome = nome
         self.__preco = preco
+        self.__codigo = codigo
 
     @property
     def nome(self):
@@ -22,3 +23,13 @@ class Servico:
        if not isinstance(preco, int):
             return
        self.__preco = preco
+
+    @property
+    def codigo(self):
+        return self.__codigo
+
+    @codigo.setter
+    def codigo(self, codigo):
+       if not isinstance(codigo, int):
+            return
+       self.__codigo = codigo
