@@ -14,16 +14,16 @@ if __name__ == "__main__":
     petshop = PetShop()
 
     # Testando o cadastro de clientes
-    print(petshop.cadastrar_cliente("João", "joao@email.com", 123456789))
-    print(petshop.cadastrar_cliente("Maria", "maria@email.com", 987654321))
+    print(petshop.cadastrar_cliente("João", "joao@email.com", 123456789, 0o3213123))
+    print(petshop.cadastrar_cliente("Maria", "maria@email.com", 987654321, 0o3213123))
 
     # Testando o cadastro de veterinários
-    vet1 = Veterinario("Dra. Maria", 88888888, "maria@email.com", "Dermatologia")
-    petshop.cadastrar_veterinario(vet1.nome, vet1.telefone, vet1.email, vet1.especialidade)
+    vet1 = Veterinario("Dra. Maria", 88888888, "maria@email.com", "Dermatologia", 213123123)
+    petshop.cadastrar_veterinario(vet1.nome, vet1.telefone, vet1.email, vet1.especialidade, vet1.cpf)
 
     # Testando o cadastro de animais
     animal1 = Animal("Rex", "Cão", "Labrador", 3)
-    petshop.cadastrar_animal(animal1.nome, animal1.especie, animal1.raca, animal1.idade)
+
 
     # Testando o cadastro de serviços
     servico1 = Servico("Vacinação", 150, 10)
@@ -40,8 +40,8 @@ if __name__ == "__main__":
      #   print("Erro ao cadastrar consulta.")
     # Listar animais do cliente
     cliente1 = petshop.clientes[0]  # Pegando o primeiro cliente
-    cliente1.adicionar_animal(animal1)
-    print("Animais do cliente:", cliente1.listar_animais())
+    
+   
 
     # Verificar se o veterinário tem consultas
     print("Consultas do veterinário:", [c.exibir_detalhes() for c in vet1.consultas])

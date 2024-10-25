@@ -65,8 +65,8 @@ class PetShop:
         self.__animais = animais
     
 
-    def cadastrar_cliente(self, nome: str, email: str, telefone: int):
-        cliente = Cliente(nome, email, telefone)
+    def cadastrar_cliente(self, nome: str, email: str, telefone: int, cpf: int):
+        cliente = Cliente(nome, email, telefone, cpf)
         if cliente in self.__clientes:
             return
         self.__clientes.append(cliente)
@@ -78,8 +78,8 @@ class PetShop:
             return
         self.__produtos.append(produto)
 
-    def listar_produtos(self):
-        return [produto.nome for produto in self.__produtos]   
+    def listar_produtos_disponiveis(self):
+        return [produto.nome for produto in self.__produtos if produto.quantidade_estoque > 0]   
     
 
     def cadastrar_servico(self, nome: str, preco: int, codigo: int):
@@ -91,17 +91,15 @@ class PetShop:
     def listar_servicos(self):
         return[servico.nome for servico in self.__servicos]
 
-    def cadastrar_veterinario(self, nome: str, telefone: int, email: str, especialidade:str):
-        veterinario = Veterinario(nome, telefone, email, especialidade)
+    def cadastrar_veterinario(self, nome: str, telefone: int, email: str, especialidade:str, cpf: str):
+        veterinario = Veterinario(nome, telefone, email, especialidade, cpf)
         if veterinario in self.__veterinarios:
             return
         self.__veterinarios.append(veterinario)
 
-    def cadastrar_animal(self, nome: str, especie: str, raca: str, idade: int):
-        animal = Animal(nome, especie, raca, idade)
-        if animal in self.__animais:
-            return
-        self.__animais.append(animal)
+    def registrar_animal(self, animal: Animal):        
+        if animal not in self.__animais:
+            self.__animais.append(animal)
     
     
     def cadastrar_consulta(self, data: str, horario: str, descricao: str, servico: Servico, animal: Animal, codigo: int):        

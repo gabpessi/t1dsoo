@@ -1,24 +1,26 @@
 from tela_cliente import TelaCliente
 from cliente import Cliente
+from consulta import Consulta
+from animal import Animal
 
 class ControladorClientes():
     def __init__(self, controlador_sistema):
         self.__clientes = []
         self.__controlador_sistema = controlador_sistema
-        self.__tela_consulta = TelaConsulta()
+        self.__tela_cliente = TelaCliente()
 
-    def pega_consulta_por_codigo(self, codigo: int):
-        for consulta in self.__consultas:
-            if(consulta.codigo == codigo):
-                return consulta
+    def pega_cliente_por_cpf(self, codigo: int):
+        for cliente in self.__clientes:
+            if(cliente.cpf == cpf):
+                return cliente
         return None
 
-    def incluir_consulta(self):
-        dados_consulta = self.__tela_consulta.pega_dados_consulta()        
-        s = self.pega_consulta_por_codigo(dados_consulta["codigo"])
+    def incluir_cliente(self):
+        dados_cliente = self.__tela_cliente.pega_dados_cliente()        
+        s = self.pega_cliente_por_codigo(dados_cliente["codigo"])
         if s is None:
-            consulta = Consulta(dados_consulta["data"], dados_consulta["horario"], dados_consulta["descricao"], dados_consulta["animal"], dados_consulta["servico"], dados_consulta["codigo"])
-            self.__consultas.append(consulta)
+            cliente = cliente(dados_cliente["data"], dados_cliente["horario"], dados_cliente["descricao"], dados_cliente["animal"], dados_cliente["servico"], dados_cliente["codigo"])
+            self.__clientes.append(cliente)
         else:
             self.__tela_consulta.mostra_mensagem("ATENÇÃO: Consulta já cadastrada")
 
@@ -71,16 +73,14 @@ class ControladorClientes():
 
         continua = True
         while continua:
-            lista_opcoes[self.__tela_consulta.tela_opcoes()]()
-
-    
+            lista_opcoes[self.__tela_consulta.tela_opcoes()]()   
 
 
 
-def adicionar_animal(self, animal: Animal):
-        if not isinstance(animal, Animal) or animal in self.__animais:
-            return
-        self.animais.append(animal)
+    def adicionar_animal(self, animal: Animal):
+            if not isinstance(animal, Animal) or animal in self.__animais:
+                return
+            self.animais.append(animal)
 
     def remover_animal(self, animal: Animal):
         self.animais.remove(animal)

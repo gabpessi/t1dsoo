@@ -4,8 +4,8 @@ from animal import Animal
 from servico import Servico
 
 class Veterinario(Pessoa):
-    def __init__(self, nome:str, telefone:int, email: str, especialidade: str):
-        super().__init__(nome, telefone, email)        
+    def __init__(self, nome:str, telefone:int, email: str, especialidade: str, cpf: str):
+        super().__init__(nome, telefone, email, cpf)        
         self.__especialidade = especialidade
         self.__consultas = []
 

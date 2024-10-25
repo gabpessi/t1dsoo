@@ -1,7 +1,7 @@
 from cliente import Cliente
 from produto import Produto
 class Venda:
-    def _init_(self, cliente: Cliente, data: str, valor_total: int):
+    def __init__(self, cliente: Cliente, data: str, valor_total: int):
         self.__cliente = cliente        
         self.__data = data
         self.__produtos = []
@@ -62,7 +62,7 @@ class Venda:
         return self.__valor_total
     
     def finalizar_venda(self):       
-        mensagem = f'Venda finalizada para {self._cliente.nome}. Valor total: R${self._valor_total:.2f}'        
+        mensagem = f'Venda finalizada para {self.__cliente.nome}. Valor total: R${self.__valor_total:.2f}'        
         self.__produtos = []
         self.__valor_total = 0
 
