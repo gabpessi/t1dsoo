@@ -27,8 +27,8 @@ class TelaConsulta():
     descricao = input("Descricao: ")
     animal = input("Animal: ")
     servico = input("Serviço: ")
-    codigo = int(input("Codigo: "))
-    if not isinstance(data, str) or not isinstance(descricao, str) or not isinstance(animal, str) or not isinstance(servico, str) or not isinstance(codigo, int):
+    codigo = input("Codigo: ")
+    if not isinstance(data, str) or not isinstance(descricao, str) or not isinstance(animal, str) or not isinstance(servico, str) or not isinstance(codigo, str):
       print("Dados em formato incorreto")
       return
 
@@ -44,14 +44,14 @@ class TelaConsulta():
     print("CODIGO DA CONSULTA: ", dados_consulta["codigo"])    
     print("\n")
     
-    if not isinstance(dados_consulta["data"], str) or not isinstance(dados_consulta["horario"], str) or not isinstance(dados_consulta["descricao"], str) or not isinstance(dados_consulta["animal"], str) or not isinstance(dados_consulta["servico"], str or not isinstance(dados_consulta["codigo"], int)):
+    if not isinstance(dados_consulta["data"], str) or not isinstance(dados_consulta["horario"], str) or not isinstance(dados_consulta["descricao"], str) or not isinstance(dados_consulta["animal"], str) or not isinstance(dados_consulta["servico"], str or not isinstance(dados_consulta["codigo"], str)):
       print("Dados em formato incorreto")
       return
 
   #fazer aqui tratamento dos dados, caso a entrada seja diferente do esperado
   def seleciona_consulta(self):
-    codigo = int(input("Código da consulta que deseja selecionar: "))
-    if not isinstance(codigo, int):
+    codigo = input("Código da consulta que deseja selecionar: ")
+    if not isinstance(codigo, str):
       print("Dados em forma incorreta")
       return
     

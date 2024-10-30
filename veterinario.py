@@ -4,7 +4,7 @@ from animal import Animal
 from servico import Servico
 
 class Veterinario(Pessoa):
-    def __init__(self, nome:str, telefone:int, email: str, especialidade: str, cpf: str):
+    def __init__(self, nome:str, telefone:int, email: str, cpf: str, especialidade: str):
         super().__init__(nome, telefone, email, cpf)        
         self.__especialidade = especialidade
         self.__consultas = []
@@ -35,6 +35,7 @@ class Veterinario(Pessoa):
         self.__consultas.append(consulta)
 
     def remover_consulta(self, consulta: Consulta):
-        self.__consultas.remove(consulta)
+        if consulta in self.__consultas:
+            self.__consultas.remove(consulta)
         
     

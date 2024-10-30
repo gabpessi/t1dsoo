@@ -3,7 +3,7 @@ from servico import Servico
 
 
 class Consulta:
-    def __init__(self, data: str, horario:str, descricao: str, animal: Animal, servico: Servico, codigo: int):
+    def __init__(self, data: str, horario:str, descricao: str, animal: Animal, servico: Servico, codigo: str):
         self.__data = data
         self.__horario = horario
         self.__descricao = descricao
@@ -67,7 +67,7 @@ class Consulta:
 
     @codigo.setter
     def codigo(self, codigo):
-       if not isinstance(codigo, int):
+       if not isinstance(codigo, str):
             return
        self.__codigo = codigo
 

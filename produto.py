@@ -44,6 +44,13 @@ class Produto:
        if not isinstance(quantidade_estoque, int):
             return
        self.__quantidade_estoque = quantidade_estoque
+       
 
-    
+    def atualizar_estoque(self, quantidade):
+        if self.__quantidade_estoque + quantidade >= 0:
+            self.__quantidade_estoque += quantidade
+            return True
+        else:
+            print("Quantidade insuficiente em estoque.")
+            return False
     

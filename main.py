@@ -22,7 +22,7 @@ if __name__ == "__main__":
     petshop.cadastrar_veterinario(vet1.nome, vet1.telefone, vet1.email, vet1.especialidade, vet1.cpf)
 
     # Testando o cadastro de animais
-    animal1 = Animal("Rex", "Cão", "Labrador", 3)
+    animal1 = Animal("Rex", "Cão", "Labrador", 3, 2303120)
 
 
     # Testando o cadastro de serviços
@@ -32,7 +32,8 @@ if __name__ == "__main__":
     # Listar serviços cadastrados
     print("Serviços disponíveis:", petshop.listar_servicos())
 
-   # Testando o cadastro de consultas
+   # Testando o cadastro de c2
+   # nsultas
     #consulta1 = petshop.cadastrar_consulta("05/10/2024", "14:00", "Consulta de rotina", servico1, animal1, 2233)
     #if consulta1:  # Verificar se consulta1 não é None
     #    print("Consulta cadastrada:", consulta1.exibir_detalhes())

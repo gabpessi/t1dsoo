@@ -1,19 +1,20 @@
 class Animal:
-    def __init__(self, nome: str, especie: str, raca: str, idade: int):
-        self.__nome = nome
+    def __init__(self, nome_animal: str, especie: str, raca: str, idade: int, numero_cadastro: str):
+        self.__nome_animal = nome_animal
         self.__especie = especie
         self.__raca = raca
         self.__idade = idade
+        self.__numero_cadastro = numero_cadastro
 
     @property 
-    def nome(self):
-        return self.__nome
+    def nome_animal(self):
+        return self.__nome_animal
 
-    @nome.setter
-    def nome(self, nome):
-       if not isinstance(nome, str):
+    @nome_animal.setter
+    def nome_animal(self, nome_animal):
+       if not isinstance(nome_animal, str):
             return
-       self.__nome = nome
+       self.__nome_animal = nome_animal
 
     @property
     def especie(self):
@@ -45,8 +46,18 @@ class Animal:
             return
        self.__idade = idade 
 
+    @property
+    def numero_cadastro(self):
+        return self.__numero_cadastro
+
+    @numero_cadastro.setter
+    def numero_cadastro(self, numero_cadastro):
+       if not isinstance(numero_cadastro, str):
+            return
+       self.__numero_cadastro = numero_cadastro 
+
     
-    def incrementar_idade(self):
-        self.__idade += 1
+    def incrementar_numero_cadastro(self):
+        self.__numero_cadastro += 1
 
     

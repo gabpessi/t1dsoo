@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 class Pessoa(ABC):
-    def __init__(self, nome: str, telefone: int, email:str, cpf: str):
+
+    @abstractmethod
+    def __init__(self, nome: str, telefone: str, email:str, cpf: str):
         self.__nome = nome
         self.__telefone = telefone
         self.__email = email
@@ -32,7 +34,7 @@ class Pessoa(ABC):
 
     @telefone.setter
     def telefone(self, telefone):
-       if not isinstance(telefone, int):
+       if not isinstance(telefone, str):
             return
        self.__telefone = telefone
 

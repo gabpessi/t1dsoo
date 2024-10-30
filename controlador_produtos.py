@@ -7,7 +7,8 @@ class ControladorProdutos():
         self.__controlador_sistema = controlador_sistema
         self.__tela_produto = TelaProduto()
 
-    def pega_produto_por_codigo(self, codigo: int):
+    def pega_produto_por_codigo(self, codigo: str):
+        print(f"Buscando produto com código: {codigo}")
         for produto in self.__produtos:
             if(produto.codigo == codigo):
                 return produto
@@ -53,15 +54,16 @@ class ControladorProdutos():
         else:
             self.__tela_produto.mostra_mensagem("ATENCÃO: produto não existente")
 
-    def verificar_disponibilidade(self: bool): 
+    def verificar_disponibilidade(self):
         self.lista_produto()
         codigo_produto = self.__tela_produto.seleciona_produto()  
         produto = self.pega_produto_por_codigo(codigo_produto)
-        
-        if(produto is not None):
+
+        if produto:
             self.__tela_produto.mostra_mensagem(f"Produto disponível em {produto.quantidade_estoque} unidades")
         else:
             self.__tela_produto.mostra_mensagem("Produto não disponível")        
+    
    
 
     def retornar(self):
