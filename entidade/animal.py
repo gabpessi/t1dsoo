@@ -11,7 +11,7 @@ class Animal:
         return self.__nome_animal
 
     @nome_animal.setter
-    def nome_animal(self, nome_animal: str):       
+    def nome_animal(self, nome_animal: str):   
        self.__nome_animal = nome_animal
 
     @property

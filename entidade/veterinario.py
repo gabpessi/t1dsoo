@@ -22,12 +22,9 @@ class Veterinario(Pessoa):
         return self.__consultas
     
     def adicionar_consulta(self, consulta: Consulta):
-        if consulta in self.__consultas:
-            return
-        self.__consultas.append(consulta)
+        if consulta not in self.__consultas:  
+            self.__consultas.append(consulta)
 
-    def remover_consulta(self, consulta: Consulta):
-        if consulta in self.__consultas:
-            self.__consultas.remove(consulta)
+    def remover_consulta(self, consulta: Consulta):        
+        self.__consultas.remove(consulta)
         
-    

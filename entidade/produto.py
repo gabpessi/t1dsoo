@@ -39,9 +39,16 @@ class Produto:
        
 
     def atualizar_estoque(self, quantidade):
-        if self.__quantidade_estoque + quantidade >= 0:
-            self.__quantidade_estoque += quantidade
-            return True
-        else:            
-            return False
+        try:
+
+            quantidade_estoque = int(self.__quantidade_estoque)
+
+            if quantidade_estoque + quantidade >= 0:
+                self.__quantidade_estoque = quantidade_estoque + quantidade
+                return True
+            else:
+                return False
+        except ValueError:
+            raise ValueError("Erro: A quantidade em estoque não é um número válido.")
+
     

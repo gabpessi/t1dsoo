@@ -3,28 +3,30 @@ from entidade.veterinario import Veterinario
 from exceptions.lista_vazia_exception import ListaVaziaException
 from exceptions.objeto_nao_encontrado_exception import ObjetoNaoEncontradoException
 from exceptions.objeto_repetido_exception import ObjetoRepetidoException
-
+from DAOs.veterinario_dao import VeterinarioDAO
 class ControladorVeterinarios():
     def __init__(self, controlador_sistema):
-        self.__veterinarios = []
+        self.__veterinario_DAO = VeterinarioDAO()
         self.__controlador_sistema = controlador_sistema        
         self.__tela_veterinario = TelaVeterinario()
 
     def pega_veterinario_por_cpf(self, cpf: str):
-        for veterinario in self.__veterinarios:
+        for veterinario in self.__veterinario_DAO.get_all():
             if(veterinario.cpf == cpf):
                 return veterinario
         return None
 
     def incluir_veterinario(self):
         dados_veterinario = self.__tela_veterinario.pega_dados_veterinario()
+        if not dados_veterinario:
+            return
         cpf = dados_veterinario["cpf"]        
         veterinario = self.pega_veterinario_por_cpf(cpf)
         cliente = self.__controlador_sistema.controlador_clientes.pega_cliente_por_cpf(cpf)
         try:
             if veterinario == None and cliente == None:
                 veterinario = Veterinario(dados_veterinario["nome"], dados_veterinario["telefone"], dados_veterinario["email"], dados_veterinario["cpf"], dados_veterinario["especialidade"])
-                self.__veterinarios.append(veterinario) 
+                self.__veterinario_DAO.add(veterinario)
                 self.__tela_veterinario.mostra_mensagem("Veterinário cadastrado com sucesso")              
             else:
                 raise ObjetoRepetidoException("CPF", cpf)
@@ -34,7 +36,7 @@ class ControladorVeterinarios():
 
     def alterar_veterinario(self):
         try:
-            if not self.__veterinarios:
+            if not self.__veterinario_DAO.get_all():
                 raise ListaVaziaException("veterinários") 
             self.lista_veterinario()
             cpf_veterinario = self.__tela_veterinario.seleciona_veterinario()
@@ -45,8 +47,8 @@ class ControladorVeterinarios():
                 veterinario.nome = novos_dados_veterinario["nome"]
                 veterinario.telefone = novos_dados_veterinario["telefone"]
                 veterinario.email = novos_dados_veterinario["email"]
-                veterinario.cpf = novos_dados_veterinario["cpf"]
-                veterinario.especialidade = novos_dados_veterinario["especialidade"]                
+                veterinario.especialidade = novos_dados_veterinario["especialidade"] 
+                self.__veterinario_DAO.update(veterinario)               
                 self.lista_veterinario()
             else:
                 raise ObjetoNaoEncontradoException("Veterinário")  
@@ -59,25 +61,26 @@ class ControladorVeterinarios():
 
 
     def lista_veterinario(self):
+        dados_veterinarios = []
         try:
-            if not self.__veterinarios:
-                raise ListaVaziaException("veterinários")
-            for veterinario in self.__veterinarios:            
-                self.__tela_veterinario.mostra_veterinario({"nome": veterinario.nome, "telefone": veterinario.telefone, "email": veterinario.email, "cpf": veterinario.cpf, "especialidade": veterinario.especialidade, "consultas": veterinario.consultas})
-
+            if not self.__veterinario_DAO.get_all():
+                raise ListaVaziaException("veterinários")      
+            for veterinario in self.__veterinario_DAO.get_all():
+                dados_veterinarios.append({"nome": veterinario.nome, "telefone": veterinario.telefone, "email": veterinario.email, "cpf": veterinario.cpf, "especialidade": veterinario.especialidade, "consultas": veterinario.consultas})  
+            self.__tela_veterinario.mostra_veterinario(dados_veterinarios)  
         except ListaVaziaException as e:
             self.__tela_veterinario.mostra_mensagem(e)
 
     def excluir_veterinario(self):
         try:
-            if not self.__veterinarios:
+            if not self.__veterinario_DAO.get_all():
                 raise ListaVaziaException("veterinários") 
             self.lista_veterinario()
             cpf_veterinario = self.__tela_veterinario.seleciona_veterinario()
             veterinario = self.pega_veterinario_por_cpf(cpf_veterinario)
 
             if veterinario is not None:
-                self.__veterinarios.remove(veterinario)
+                self.__veterinario_DAO.remove(veterinario.cpf)
                 self.lista_veterinario()
             else:
                 raise ObjetoNaoEncontradoException("Veterinário") 
@@ -90,7 +93,7 @@ class ControladorVeterinarios():
    
     def adicionar_consulta_por_codigo(self):
         try:
-            if not self.__veterinarios:
+            if not self.__veterinario_DAO.get_all():
                 raise ListaVaziaException("veterinários")
             
             self.lista_veterinario() 
@@ -98,14 +101,14 @@ class ControladorVeterinarios():
             veterinario = self.pega_veterinario_por_cpf(cpf)
 
             if not veterinario:
-                raise ObjetoNaoEncontradoException("Veterinário")
-            
+                raise ObjetoNaoEncontradoException("Veterinário")            
             codigo_consulta = self.__controlador_sistema.controlador_consultas.seleciona_consulta()
             consulta = self.__controlador_sistema.controlador_consultas.pega_consulta_por_codigo(codigo_consulta)
 
             if consulta:
                 veterinario.adicionar_consulta(consulta)
                 self.listar_consultas_veterinario()
+                self.__veterinario_DAO.update(veterinario)
                 self.__tela_veterinario.mostra_mensagem("Consulta adicionada à lista do veterinário.")
             else:
                 raise ObjetoNaoEncontradoException("Código de consulta")
@@ -115,48 +118,46 @@ class ControladorVeterinarios():
             return  
         except ObjetoNaoEncontradoException as e:
             self.__tela_veterinario.mostra_mensagem(e) 
-        
 
     def remover_consulta_por_codigo(self):
         try:
-            if not self.__veterinarios:
-                raise ListaVaziaException("veterinários")
-            self.lista_veterinario()
-            cpf_veterinario = self.__tela_veterinario.seleciona_veterinario()
+            if not self.__veterinario_DAO.get_all():
+                raise ListaVaziaException("veterinários")            
+            self.lista_veterinario()           
+            cpf_veterinario = self.__tela_veterinario.seleciona_veterinario()            
             veterinario = self.pega_veterinario_por_cpf(cpf_veterinario)
 
-            if not veterinario:
-                ObjetoNaoEncontradoException("Veterinário")                
-            
-            codigo_consulta = self.__controlador_sistema.controlador_consultas.seleciona_consulta()
-            consulta = self.__controlador_sistema.controlador_consultas.pega_consulta_por_codigo(codigo_consulta)
+            if veterinario is None:
+                raise ObjetoNaoEncontradoException("Veterinário")            
 
+            self.listar_consultas_veterinario()              
+            codigo = self.__controlador_sistema.controlador_consultas.seleciona_consulta()           
+            consulta = self.__controlador_sistema.controlador_consultas.pega_consulta_por_codigo(codigo)
+       
             if consulta in veterinario.consultas:
                 veterinario.remover_consulta(consulta)
+                self.__veterinario_DAO.update(veterinario)
                 self.listar_consultas_veterinario()
-                self.__tela_veterinario.mostra_mensagem("Consulta removida da lista do veterinário.")
+                self.__tela_veterinario.mostra_mensagem("Consulta removida com sucesso.")
             else:
                 raise ObjetoNaoEncontradoException("Consulta")
-            
+
         except ListaVaziaException as e:
-            self.__tela_veterinario.mostra_mensagem(e) 
-            return  
+            self.__tela_veterinario.mostra_mensagem(e)
         except ObjetoNaoEncontradoException as e:
-            self.__tela_veterinario.mostra_mensagem(e) 
-            
+            self.__tela_veterinario.mostra_mensagem(e)            
 
     def listar_consultas_veterinario(self):
         try:
-            if not self.__veterinarios:
+            if not self.__veterinario_DAO.get_all():
                 raise ListaVaziaException("veterinários")
+            encontrou_consultas = False 
 
-            encontrou_consultas = False  # Flag para verificar se alguma consulta foi encontrada
-
-            for veterinario in self.__veterinarios:
+            for veterinario in self.__veterinario_DAO.get_all():
                 if veterinario.consultas:
                     encontrou_consultas = True
-                    print(f"Veterinário: {veterinario.nome} (CPF: {veterinario.cpf})")  # Exibe o veterinário
-                    self.__tela_veterinario.mostra_consulta(veterinario.consultas)  # Exibe as consultas do veterinário
+                    
+                    self.__tela_veterinario.mostra_consulta(veterinario.consultas, veterinario.cpf)
 
             if not encontrou_consultas:
                 raise ListaVaziaException("consultas dos veterinários")
@@ -165,7 +166,6 @@ class ControladorVeterinarios():
             self.__tela_veterinario.mostra_mensagem(e)
         except ObjetoNaoEncontradoException as e:
             self.__tela_veterinario.mostra_mensagem(e)
-
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()

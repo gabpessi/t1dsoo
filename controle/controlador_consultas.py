@@ -1,18 +1,19 @@
 from limite.tela_consulta import TelaConsulta
 from entidade.consulta import Consulta
 import locale
+from DAOs.consulta_dao import ConsultaDAO
 from exceptions.lista_vazia_exception import ListaVaziaException
 from exceptions.objeto_nao_encontrado_exception import ObjetoNaoEncontradoException
 from exceptions.objeto_repetido_exception import ObjetoRepetidoException
 
 class ControladorConsultas():
-    def __init__(self, controlador_sistema):
-        self.__consultas = []
+    def __init__(self, controlador_sistema):        
+        self.__consulta_DAO = ConsultaDAO()
         self.__controlador_sistema = controlador_sistema
         self.__tela_consulta = TelaConsulta()
 
     def pega_consulta_por_codigo(self, codigo: int):
-        for consulta in self.__consultas:
+        for consulta in self.__consulta_DAO.get_all():
             if(consulta.codigo == codigo):
                 return consulta
         return None
@@ -21,7 +22,9 @@ class ControladorConsultas():
         return self.__tela_consulta.seleciona_consulta()
 
     def incluir_consulta(self):
-        dados_consulta = self.__tela_consulta.pega_dados_consulta()        
+        dados_consulta = self.__tela_consulta.pega_dados_consulta() 
+        if not dados_consulta:
+            return   
         try:
             animal = self.__controlador_sistema.controlador_clientes.pega_animal_por_numero_cadastro(dados_consulta["codigo_animal"])
             if animal is None:
@@ -36,7 +39,7 @@ class ControladorConsultas():
                 raise ObjetoRepetidoException("Consulta", dados_consulta["codigo"])
             
             consulta = Consulta(dados_consulta["data"], dados_consulta["horario"], dados_consulta["descricao"], animal, servico, dados_consulta["codigo"])
-            self.__consultas.append(consulta)
+            self.__consulta_DAO.add(consulta)
             self.__tela_consulta.mostra_mensagem("Consulta cadastrada com sucesso!")
         
         except ObjetoNaoEncontradoException as e:
@@ -47,7 +50,7 @@ class ControladorConsultas():
 
     def alterar_consulta(self):
         try:
-            if not self.__consultas:
+            if self.__consulta_DAO.get_all() == None: 
                 raise ListaVaziaException("consultas")
             self.lista_consulta()
             codigo_consulta = self.__tela_consulta.seleciona_consulta()
@@ -58,12 +61,12 @@ class ControladorConsultas():
                 consulta.data = novos_dados_consulta["data"]
                 consulta.horario = novos_dados_consulta["horario"]
                 consulta.descricao = novos_dados_consulta["descricao"]
-                consulta.codigo = novos_dados_consulta["codigo"]
                 consulta.animal = novos_dados_consulta["codigo_animal"]
                 consulta.servico = novos_dados_consulta["codigo_servico"]
+                self.__consulta_DAO.update(consulta)
                 self.lista_consulta()
             else:
-                raise ObjetoNaoEncontradoException("Consulta")
+                raise ObjetoNaoEncontradoException("Código de Consulta")
             
         except ObjetoNaoEncontradoException as e:
             self.__tela_consulta.mostra_mensagem(e)
@@ -71,29 +74,30 @@ class ControladorConsultas():
             self.__tela_consulta.mostra_mensagem(e)
 
     def lista_consulta(self):
+        dados_consultas = []
         try:   
-            if not self.__consultas:
+            if self.__consulta_DAO.get_all() == None:
                 raise ListaVaziaException("consultas")
-            for consulta in self.__consultas:
-                self.__tela_consulta.mostra_consulta({"data": consulta.data, "horario": consulta.horario, "descricao": consulta.descricao, "animal": consulta.animal, "servico":consulta.servico, "codigo": consulta.codigo})
+            for consulta in self.__consulta_DAO.get_all():
+                dados_consultas.append({"data": consulta.data, "horario": consulta.horario, "descricao": consulta.descricao, "animal": consulta.animal, "servico":consulta.servico, "codigo": consulta.codigo})
+            self.__tela_consulta.mostra_consulta(dados_consultas)
 
         except ListaVaziaException as e:
             self.__tela_consulta.mostra_mensagem(e)
 
-
     def excluir_consulta(self):
         try:
-            if not self.__consultas:
+            if self.__consulta_DAO.get_all() == None:
                 raise ListaVaziaException("consultas")
             self.lista_consulta()
             codigo_consulta = self.__tela_consulta.seleciona_consulta()
             consulta = self.pega_consulta_por_codigo(codigo_consulta)
 
             if consulta is not None:
-                self.__consultas.remove(consulta)
+                self.__consulta_DAO.remove(consulta.codigo)
                 self.lista_consulta()
             else:
-                raise ObjetoNaoEncontradoException("Consulta")        
+                raise ObjetoNaoEncontradoException("Código de Consulta")        
         
         except ObjetoNaoEncontradoException as e:
             self.__tela_consulta.mostra_mensagem(e) 
@@ -102,18 +106,17 @@ class ControladorConsultas():
     
     def exibir_detalhes(self):
         try:
-            if not self.__consultas:
+            if self.__consulta_DAO.get_all() == None:
                 raise ListaVaziaException("consultas")
             self.lista_consulta()
             codigo_consulta = self.__tela_consulta.seleciona_consulta()
             consulta = self.pega_consulta_por_codigo(codigo_consulta)
 
-            if consulta is not None:
-                data_formatada = consulta.data.strftime("%d/%m/%Y")
-                horario_formatado = consulta.horario.strftime("%H:%M")
-                self.__tela_consulta.mostra_mensagem(f"Consulta em {data_formatada} no horário {horario_formatado} para {consulta.animal.nome_animal}. Descrição: {consulta.descricao}. Serviço: {consulta.servico.nome}.")
+            if consulta is not None:                
+                self.__tela_consulta.mostra_mensagem(f"Consulta em {consulta.data.strftime("%d/%m/%Y")} no horário {consulta.horario} para {consulta.animal.nome_animal}. Descrição: {consulta.descricao}. Serviço: {consulta.servico.nome}.")
+
             else:
-                raise ObjetoNaoEncontradoException("Consulta")
+                raise ObjetoNaoEncontradoException("Código de Consulta")
         except ObjetoNaoEncontradoException as e:
             self.__tela_consulta.mostra_mensagem(e)
         except ListaVaziaException as e:
@@ -122,7 +125,7 @@ class ControladorConsultas():
     def gerar_relatorio(self):
         locale.setlocale(locale.LC_TIME, "pt_BR.utf8")
         try:
-            if not self.__consultas:
+            if self.__consulta_DAO.get_all() == None:
                 raise ListaVaziaException("consultas")
             
             data_inicio, data_fim = self.__tela_consulta.solicita_periodo()
@@ -132,7 +135,7 @@ class ControladorConsultas():
             contagem_racas = {}
             contagem_servicos = {}
 
-            for consulta in self.__consultas:
+            for consulta in self.__consulta_DAO.get_all():                
                 if data_inicio <= consulta.data <= data_fim:
                     mes = consulta.data.strftime("%B %Y").lower()
                     especie = consulta.animal.especie.lower()
@@ -152,7 +155,6 @@ class ControladorConsultas():
             def formatar_contagem(nome, contagem):
                 return f"{nome} ({contagem} consulta{'s' if contagem != 1 else ''})"
 
-            # Geração do relatório formatado
             relatorio_mes = formatar_contagem(mes_mais_consultas, contagem_meses.get(mes_mais_consultas, 0))
             relatorio_especie = formatar_contagem(especie_mais_consultada, contagem_especies.get(especie_mais_consultada, 0))
             relatorio_raca = formatar_contagem(raca_mais_consultada, contagem_racas.get(raca_mais_consultada, 0))
@@ -163,9 +165,6 @@ class ControladorConsultas():
 
         except ListaVaziaException as e:
             self.__tela_consulta.mostra_mensagem(e)
-
-
-
 
     def retornar(self):
         self.__controlador_sistema.abre_tela()
